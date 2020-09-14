@@ -5,6 +5,7 @@ import Table from './Table/table';
 import Itemcard from './Itemcard/itemcard';
 import ReactPaginate from 'react-paginate';
 import Search from './Search/search';
+import Addform from './Addform/addform';
 
 
 class App extends Component {
@@ -17,8 +18,7 @@ class App extends Component {
     row: null,
     currentPage: 0,
     pageSize: 50,
-    pageCount: 0,
-    sliceData: [],
+    search: '',
   }
 
   fetchData(url) {
@@ -28,7 +28,7 @@ class App extends Component {
         isLoading: false,
         data: res
       }))
-      .then(() => this.setState({ pageCount: Math.ceil(this.state.data.length / this.state.pageSize) }))
+      
   }
 
   Selectdata = url => {
@@ -59,9 +59,42 @@ class App extends Component {
     this.setState({ currentPage: selected })
   )
 
+  handleSearch = search =>{
+    this.setState({search, currentPage: 0})
+  }
+
+  getFilteredData(){
+    const {data, search} = this.state
+
+    if (!search) {
+      return data
+    }
+
+    return data.filter(item => {
+      return item['firstName'].toLowerCase().includes(search.toLowerCase())
+        || item['lastName'].toLowerCase().includes(search.toLowerCase())
+        || item['email'].toLowerCase().includes(search.toLowerCase())
+        || item['id'].toString().includes(search.toString())
+     
+    })
+  }
+  dispData(){
+   let data = this.getFilteredData();
+   return data.slice(this.state.currentPage * this.state.pageSize, this.state.currentPage * this.state.pageSize + this.state.pageSize)
+  }
+
+  additem = (id, firstName, lastName, email, phone) => {
+    let data = this.state.data;
+    data.unshift({id: id, firstName: firstName, lastName: lastName, email: email, phone: phone})
+    this.setState({data})
+  }
+
+
 
   render() {
-    const dispData = this.state.data.slice(this.state.currentPage * this.state.pageSize, this.state.currentPage * this.state.pageSize + this.state.pageSize)
+    const data = this.dispData();
+    const filttredData = this.getFilteredData();
+    const pageCount = Math.ceil(filttredData.length / this.state.pageSize);
 
     if (!this.state.dataselected) {
       return (
@@ -74,22 +107,23 @@ class App extends Component {
         <div className="container">
           {this.state.isLoading ? <Loader /> :
             <Fragment>
-              <Search />
+              <Search onSearch={this.handleSearch}/>
+              <Addform add = {this.additem}/>
               <Table
-                data={dispData}
+                data={data}
                 sort={this.Sort}
                 column={this.state.sortcolumn}
                 direction={this.state.sortdirection}
                 select={this.Selectrow} />
             </Fragment>
           }
-          {this.state.pageCount > 1 ?
+          {this.state.data.length > this.state.pageSize  ?
             <ReactPaginate
               previousLabel={'previous'}
               nextLabel={'next'}
               breakLabel={'.....'}
               breakClassName={'break-me'}
-              pageCount={this.state.pageCount}
+              pageCount={pageCount}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={this.handlePageClick}
