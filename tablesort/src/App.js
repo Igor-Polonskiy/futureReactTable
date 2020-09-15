@@ -117,7 +117,7 @@ class App extends Component {
                 select={this.Selectrow} />
             </Fragment>
           }
-          {this.state.data.length > this.state.pageSize  ?
+          {filttredData.length > this.state.pageSize  ?
             <ReactPaginate
               previousLabel={'previous'}
               nextLabel={'next'}

@@ -16,7 +16,7 @@ export default props => {
             />
             <button
                 className="btn btn-outline-secondary"
-                onClick={() => props.onSearch(value)} >Search
+                onClick={() => props.onSearch(value)} >Найти
                 </button>
         </div>
     )
