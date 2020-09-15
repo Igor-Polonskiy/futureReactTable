@@ -67,7 +67,7 @@ class Addform extends Component {
                                 <label>Last Name<input className='form-control' type='text' value={this.state.lastName} onChange={(event) => this.handelChange(event, 'lastName')}></input></label>
                                 <label>E-mail<input className='form-control' type='email' value={this.state.email} onChange={(event) => this.handelChange(event, 'email')}></input></label>
                                 <label>Phone<input className='form-control' type='phone' value={this.state.phone} onChange={(event) => this.handelChange(event, 'phone')}></input></label>
-                                <button className="btn btn-primary" disabled={disabled} onClick={this.hanleSubmit.bind(this)}>Lобавить в таблицу</button>
+                                <button className="btn btn-primary" disabled={disabled} onClick={this.hanleSubmit.bind(this)}>Добавить в таблицу</button>
                             </div>
                         </form> :
                         <button className="btn btn-primary" onClick={this.handleClick}>Добавить</button>
